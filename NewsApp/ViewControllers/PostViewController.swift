@@ -20,11 +20,14 @@ class PostViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.configureNavController()
-        self.configureActivityIndicator()
-        self.configureObservation()
-        self.configureWebView()
-
+        configureNavController()
+        configureWebView()
+        configureActivityIndicator()
+        configureObservation()
+    }
+    
+    deinit {
+        self.observation?.invalidate()
     }
     
     private func configureNavController() {
@@ -38,12 +41,12 @@ class PostViewController: UIViewController {
     
     private func configureActivityIndicator() {
         self.view.addSubview(self.activityIndicator)
-        self.activityIndicator.center = self.view.center
-        self.activityIndicator.hidesWhenStopped = true
+        activityIndicator.center = self.view.center
+        activityIndicator.hidesWhenStopped = true
     }
     
     private func configureObservation() {
-        self.observation = self.webView.observe(\.isLoading, options: .new) { [weak self] webView, change in
+        observation = self.webView.observe(\.isLoading, options: .new) { [weak self] webView, change in
             guard let self = self, let isLoading = change.newValue else {
                 return
             }
@@ -67,9 +70,9 @@ class PostViewController: UIViewController {
     }
     
     private func configureWebView() {
-        self.webView.frame = self.view.frame
-        self.webView.frame.origin.y = 90
-        self.view.addSubview(self.webView)
+        webView.frame = self.view.frame
+        webView.frame.origin.y = 90
+        self.view.addSubview(webView)
     }
     
     private func loadRequest() {
@@ -77,6 +80,6 @@ class PostViewController: UIViewController {
             return
         }
         let request = URLRequest(url: url)
-        self.webView.load(request)
+        webView.load(request)
     }
 }
