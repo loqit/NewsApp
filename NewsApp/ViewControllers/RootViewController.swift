@@ -22,9 +22,10 @@ class RootViewController: UIViewController {
         super.viewDidLoad()
         
         configureNavController()
-        configureTableView()
         
-        articles = fetchArticles()
+        configureTableView()
+        fetchArticles()
+        print(articles.count)
     }
     
     func configureNavController() {
@@ -48,29 +49,25 @@ class RootViewController: UIViewController {
     func configureTableView() {
         self.view.addSubview(tableView)
         setTableViewDelegates()
-        tableView.rowHeight = 100
-        tableView.register(ArticleCell.self, forCellReuseIdentifier: Cells.articleCell)
+        tableView.rowHeight = 370
+        tableView.register(UINib(nibName: Cells.articleCell, bundle: nil), forCellReuseIdentifier: Cells.articleCell)
         tableView.pin(to: view)
         tableView.backgroundColor = .clear
-        
         
     }
 
     func setTableViewDelegates() {
         tableView.delegate = self
         tableView.dataSource = self
-        
     }
 }
 
 extension RootViewController: UITableViewDelegate, UITableViewDataSource {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return articles.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: Cells.articleCell) as! ArticleCell
         let article = articles[indexPath.row]
         cell.set(article: article)
@@ -81,16 +78,27 @@ extension RootViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension RootViewController {
-    func fetchArticles() -> [Article] {
-        var articles = [Article]()
-        service.fetchTopHeadline(keyword: "trump") { result in
-            switch result {
-            case .success(let news):
-                articles = news.articles ?? []
-            case .failure(let error):
-                print(error)
+    
+    func fetchArticles() {
+        var data = [Article]()
+        DispatchQueue.global().async {
+            self.service.fetchTopHeadline(keyword: "trump") { result in
+                switch result {
+                case .success(let news):
+                    data = news.articles ?? []
+                    self.updateTableView(with: data)
+                case .failure(let error):
+                    print(error)
+                }
             }
         }
-        return articles
+
+    }
+    
+    func updateTableView(with data: [Article]) {
+        DispatchQueue.main.async {
+            self.articles = data
+            self.tableView.reloadData()
+        }
     }
 }

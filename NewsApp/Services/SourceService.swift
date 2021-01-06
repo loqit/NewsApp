@@ -19,7 +19,6 @@ class SourceService {
         let params = ["country" : country,
                       "category" : category,
                       "language": language] as [String : Any]
-        print(params)
         self.networkManager.get(path: NetworkConstants.sourceUrl,
                                 params: params as [String : Any],
                                 completion: completion)

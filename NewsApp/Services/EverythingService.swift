@@ -35,7 +35,6 @@ class EverythingService {
                       "sortBy": sortBy,
                       "pageSize": pageSize,
                       "page" : page] as [String : Any]
-        print(params)
         self.networkManager.get(path: NetworkConstants.everythingUrl,
                                 params: params as [String : Any],
                                 completion: completion)

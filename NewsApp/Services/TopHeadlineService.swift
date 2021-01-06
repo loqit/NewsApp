@@ -23,7 +23,6 @@ class TopHeadlineService {
                       "category" : category,
                       "pageSize": pageSize,
                       "page" : page] as [String : Any]
-        print(params)
         self.networkManager.get(path: NetworkConstants.topHeadlinesUrl,
                                 params: params as [String : Any],
                                 completion: completion)
