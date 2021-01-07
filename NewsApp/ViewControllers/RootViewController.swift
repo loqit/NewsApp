@@ -13,26 +13,34 @@ class RootViewController: UIViewController {
     private let searchController = UISearchController(searchResultsController: nil)
     var tableView = UITableView()
     var articles = [Article]()
-
+    
     
     struct Cells {
         static let articleCell = "ArticleCell"
+        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        configureSearchBar()
         configureNavController()
-        
         configureTableView()
         fetchArticles()
         
+    }
+    
+    func configureSearchBar() {
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = true
+        
+        searchController.searchBar.delegate = self
     }
     
     func configureNavController() {
         self.title = "News"
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.prefersLargeTitles = true
+        
     }
     
     func configureTableView() {
@@ -78,10 +86,12 @@ extension RootViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension RootViewController {
     
-    func fetchArticles() {
+    func fetchArticles(keyword: String = "",
+                       country: String = "",
+                       category: Category = .general) {
         var data = [Article]()
         DispatchQueue.global().async {
-            self.service.fetchTopHeadline(keyword: "trump") { result in
+            self.service.fetchTopHeadline(keyword: keyword, country: country, category: category) { result in
                 switch result {
                 case .success(let news):
                     data = news.articles ?? []
@@ -100,4 +110,15 @@ extension RootViewController {
             self.tableView.reloadData()
         }
     }
+}
+
+extension RootViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if let text = searchBar.text {
+            fetchArticles(keyword: text)
+        }
+    }
+    
+
 }
