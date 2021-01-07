@@ -13,6 +13,7 @@ class PostViewController: UIViewController {
     @objc private var webView = WKWebView()
     private let activityIndicator = UIActivityIndicatorView()
     private var observation: NSKeyValueObservation?
+    var url = ""
     
     private let bookMarkButton = UIBarButtonItem(image: UIImage(named: "bookmark"), style: .plain, target: self, action: #selector(toFavAction))
     private let shareButton = UIBarButtonItem(image: UIImage(named: "upload"), style: .plain, target: self, action: #selector(shareAction))
@@ -66,7 +67,7 @@ class PostViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        self.loadRequest()
+        self.loadRequest(from: url)
     }
     
     private func configureWebView() {
@@ -75,11 +76,13 @@ class PostViewController: UIViewController {
         self.view.addSubview(webView)
     }
     
-    private func loadRequest() {
-        guard let url = URL(string: "https://apple.com") else {
+    private func loadRequest(from urlString: String) {
+        guard let url = URL(string: urlString) else {
             return
         }
         let request = URLRequest(url: url)
         webView.load(request)
     }
 }
+
+

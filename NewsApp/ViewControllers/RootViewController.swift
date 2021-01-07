@@ -13,6 +13,7 @@ class RootViewController: UIViewController {
     private let searchController = UISearchController(searchResultsController: nil)
     var tableView = UITableView()
     var articles = [Article]()
+
     
     struct Cells {
         static let articleCell = "ArticleCell"
@@ -25,26 +26,14 @@ class RootViewController: UIViewController {
         
         configureTableView()
         fetchArticles()
-        print(articles.count)
+        
     }
     
     func configureNavController() {
         self.title = "News"
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.prefersLargeTitles = true
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "next",
-                                                                     style: .plain,
-                                                                     target: self,
-                                                                     action: #selector(self.nextAction))
     }
-
-    @objc
-    private func nextAction() {
-        let viewController = PostViewController()
-        navigationController?.pushViewController(viewController, animated: true)
-    }
-
     
     func configureTableView() {
         self.view.addSubview(tableView)
@@ -74,6 +63,16 @@ extension RootViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let article = articles[indexPath.row]
+        let viewController = PostViewController()
+        if let url = article.url {
+            viewController.url = url
+        }
+
+        navigationController?.pushViewController(viewController, animated: true)
+        
+    }
     
 }
 
