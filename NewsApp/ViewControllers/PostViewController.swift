@@ -28,16 +28,16 @@ class PostViewController: UIViewController {
     }
     
     deinit {
-        self.observation?.invalidate()
+        observation?.invalidate()
     }
     
     private func configureNavController() {
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationItem.backBarButtonItem?.tintColor = .black
-        self.bookMarkButton.tintColor = .black
-        self.shareButton.tintColor = .black
-        self.navigationItem.rightBarButtonItems = [shareButton, bookMarkButton]
+        bookMarkButton.tintColor = .black
+        shareButton.tintColor = .black
+        navigationItem.rightBarButtonItems = [shareButton, bookMarkButton]
     }
     
     private func configureActivityIndicator() {
@@ -47,7 +47,7 @@ class PostViewController: UIViewController {
     }
     
     private func configureObservation() {
-        observation = self.webView.observe(\.isLoading, options: .new) { [weak self] webView, change in
+        observation = webView.observe(\.isLoading, options: .new) { [weak self] webView, change in
             guard let self = self, let isLoading = change.newValue else {
                 return
             }
@@ -67,13 +67,14 @@ class PostViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        self.loadRequest(from: url)
+        loadRequest(from: url)
     }
     
     private func configureWebView() {
         webView.frame = self.view.frame
         webView.frame.origin.y = 90
         self.view.addSubview(webView)
+        webView.pin(to: view)
     }
     
     private func loadRequest(from urlString: String) {
