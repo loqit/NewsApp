@@ -61,8 +61,15 @@ class PostViewController: UIViewController {
     }
     
     @objc
-    private func shareAction() {
-
+    private func shareAction(_ sender: UIBarButtonItem) {
+        var items = [String]()
+        items.append(url)
+        let shareController = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        
+        shareController.popoverPresentationController?.barButtonItem = sender
+        shareController.popoverPresentationController?.permittedArrowDirections = .any
+        
+        present(shareController, animated: true, completion: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {

@@ -11,7 +11,7 @@ class EverythingService {
     
     private let networkManager = NetworkManager.shared
     
-    func fetchEverything(keyword: String = "",
+    func fetchEverything( keyword: String = "",
                           keywordTitle: String = "",
                           sources: String = "",
                           domains: String = "",

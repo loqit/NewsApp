@@ -27,41 +27,12 @@ class RootViewController: UIViewController {
         configureSearchBar()
         configureNavController()
         configureTableView()
-       // createCategorySegmentControl()
         fetchHeadlines()
-
-        
     }
     
     @objc
     func setFilter() {
         
-    }
-    
-    func createCategorySegmentControl() {
-        let items = Category.allCases.map { $0.rawValue }
-        let segmentControl = UISegmentedControl(items: items)
-        segmentControl.addTarget(self, action: #selector(categoryDidChanged(_:)), for: .valueChanged)
-        segmentControl.selectedSegmentTintColor = .green
-        
-        segmentControl.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Setting constraints
-        view.addSubview(segmentControl)
-        
-        NSLayoutConstraint.activate([
-            segmentControl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
-            segmentControl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0)
-           // segmentControl.topAnchor.constraint(equalTo: .topAnchor, constant: 0)
-           // segmentControl.bottomAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 0)
-            
-        ])
-        
-    }
-    
-    @objc
-    func categoryDidChanged(_ segmentControl: UISegmentedControl) {
-        // Change category
     }
     
     func configureSearchBar() {
@@ -71,7 +42,6 @@ class RootViewController: UIViewController {
         //let items = Category.allCases.map { $0.rawValue }
         searchController.searchBar.scopeButtonTitles = ["Top Headlines", "Everything"]
         searchController.searchBar.delegate = self
-        
     }
     
     func configureNavController() {
