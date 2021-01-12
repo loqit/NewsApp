@@ -15,8 +15,6 @@ class RootViewController: UIViewController {
     var tableView = UITableView()
     var articles = [Article]()
     
-    private let filterButton = UIBarButtonItem(image: UIImage(named: "filter"), style: .plain, target: self, action: #selector(toFilter))
-    
     struct Cells {
         static let articleCell = "ArticleCell"
     }
@@ -29,13 +27,15 @@ class RootViewController: UIViewController {
         fetchHeadlines()
     }
     
+
     @objc
-    private func toFilter(_ sender: UIBarButtonItem) {
-        print("pressed")
+    private func toFilter() {
+        let vc = FilterViewController()
+        let navVC = UINavigationController(rootViewController: vc)
+        present(navVC, animated: true) 
     }
     
     func configureSearchBar() {
-        
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = true
         let items = SopeOptions.allCases.map { $0.rawValue }
@@ -47,8 +47,9 @@ class RootViewController: UIViewController {
         self.title = "News"
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.rightBarButtonItems = [filterButton]
+        let filterButton = UIBarButtonItem(image: UIImage(named: "filter"), style: .plain, target: self, action: #selector(toFilter))
         filterButton.tintColor = .black
+        navigationItem.rightBarButtonItem = filterButton
         
     }
     
@@ -87,7 +88,6 @@ extension RootViewController: UITableViewDelegate, UITableViewDataSource {
             viewController.url = url
         }
         navigationController?.pushViewController(viewController, animated: true)
-        
     }
     
 }

@@ -15,10 +15,6 @@ class PostViewController: UIViewController {
     private var observation: NSKeyValueObservation?
     var url = ""
     
-    private let bookMarkButton = UIBarButtonItem(image:  UIImage(named: "bookmark"), style: .plain, target: self, action: #selector(toFavAction))
-    private let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareAction(_:)))
-    private let noteButton = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(makeNote))
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -35,6 +31,11 @@ class PostViewController: UIViewController {
     private func configureNavController() {
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.prefersLargeTitles = true
+        
+        let bookMarkButton = UIBarButtonItem(image:  UIImage(named: "bookmark"), style: .plain, target: self, action: #selector(toFavAction))
+        let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareAction(_:)))
+        let noteButton = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(makeNote))
+        
         bookMarkButton.tintColor = .black
         shareButton.tintColor = .black
         noteButton.tintColor = .black

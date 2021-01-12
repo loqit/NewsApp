@@ -10,19 +10,22 @@ import Foundation
 class TopHeadlineService {
     
     private let networkManager = NetworkManager.shared
-    
+    // TODO: Add sources
     func fetchTopHeadline(keyword: String = "",
                           country: String = "",
-                          category: Category = .general,
+                          category: Category?,
                           pageSize: Int = 20,
                           page: Int = 1,
                           completion: @escaping (Result<News, NetworkError>) -> Void) {
         
         let params = ["q" : keyword,
                       "country" : country,
-                      "category" : category,
+                      "category" : category ?? "",
                       "pageSize": pageSize,
                       "page" : page] as [String : Any]
+        
+        //if (params["category"] != "" || params["country"] != "") && params[sou]
+        
         self.networkManager.get(path: .topHeadlinesUrl,
                                 params: params as [String : Any],
                                 completion: completion)
