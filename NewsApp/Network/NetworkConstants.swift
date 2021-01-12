@@ -7,10 +7,10 @@
 
 import Foundation
 
-class NetworkConstants {
+enum NetworkConstants: String {
     
-    static let baseUrl = "https://newsapi.org/v2/"
-    static let topHeadlinesUrl = "top-headlines"
-    static let everythingUrl = "everything"
-    static let sourceUrl = "source"
+    case baseUrl = "https://newsapi.org/v2/"
+    case topHeadlinesUrl = "top-headlines"
+    case everythingUrl = "everything"
+    case sourceUrl = "source"
 }

@@ -15,8 +15,9 @@ class PostViewController: UIViewController {
     private var observation: NSKeyValueObservation?
     var url = ""
     
-    private let bookMarkButton = UIBarButtonItem(image: UIImage(named: "bookmark"), style: .plain, target: self, action: #selector(toFavAction))
-    private let shareButton = UIBarButtonItem(image: UIImage(named: "upload"), style: .plain, target: self, action: #selector(shareAction))
+    private let bookMarkButton = UIBarButtonItem(image:  UIImage(named: "bookmark"), style: .plain, target: self, action: #selector(toFavAction))
+    private let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareAction(_:)))
+    private let noteButton = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(makeNote))
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,10 +35,11 @@ class PostViewController: UIViewController {
     private func configureNavController() {
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationItem.backBarButtonItem?.tintColor = .black
         bookMarkButton.tintColor = .black
         shareButton.tintColor = .black
-        navigationItem.rightBarButtonItems = [shareButton, bookMarkButton]
+        noteButton.tintColor = .black
+       
+        navigationItem.rightBarButtonItems = [shareButton, noteButton, bookMarkButton]
     }
     
     private func configureActivityIndicator() {
@@ -56,7 +58,12 @@ class PostViewController: UIViewController {
     }
 
     @objc
-    private func toFavAction() {
+    private func makeNote() {
+        
+    }
+    
+    @objc
+    private func toFavAction(_ sender: UIBarButtonItem) {
 
     }
     

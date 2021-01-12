@@ -26,13 +26,13 @@ class NetworkManager {
     
     private init() {}
     
-    func get<T: Codable>(path: String,
+    func get<T: Codable>(path: NetworkConstants,
                          params: [String: Any],
                          completion: @escaping (Result<T, NetworkError>) -> Void) {
         self.request(method: .get, path: path, params: params, completion: completion)
     }
     
-    func post<T: Codable>(path: String,
+    func post<T: Codable>(path: NetworkConstants,
               params: [String: Any],
               completion: @escaping (Result<T, NetworkError>) -> Void) {
         
@@ -41,12 +41,12 @@ class NetworkManager {
     }
     
     private func request<T: Codable>(method: HTTPMethod,
-                         path: String,
+                         path: NetworkConstants,
                          params: [String: Any],
                          encoding: ParameterEncoding = URLEncoding.default,
                          completion: @escaping (Result<T, NetworkError>) -> Void) -> DataRequest{
         
-        let pathString = baseUrl + path
+        let pathString = baseUrl.rawValue + path.rawValue
         
         let request = {
             return AF.request(pathString,

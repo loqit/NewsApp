@@ -15,32 +15,31 @@ class RootViewController: UIViewController {
     var tableView = UITableView()
     var articles = [Article]()
     
-    private let filterButton = UIBarButtonItem(image: UIImage(named: "filter"), style: .plain, target: self, action: #selector(setFilter))
+    private let filterButton = UIBarButtonItem(image: UIImage(named: "filter"), style: .plain, target: self, action: #selector(toFilter))
     
     struct Cells {
         static let articleCell = "ArticleCell"
-        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureSearchBar()
         configureNavController()
+        configureSearchBar()
         configureTableView()
         fetchHeadlines()
     }
     
     @objc
-    func setFilter() {
-        
+    private func toFilter(_ sender: UIBarButtonItem) {
+        print("pressed")
     }
     
     func configureSearchBar() {
         
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = true
-        //let items = Category.allCases.map { $0.rawValue }
-        searchController.searchBar.scopeButtonTitles = ["Top Headlines", "Everything"]
+        let items = SopeOptions.allCases.map { $0.rawValue }
+        searchController.searchBar.scopeButtonTitles = items
         searchController.searchBar.delegate = self
     }
     
@@ -48,8 +47,8 @@ class RootViewController: UIViewController {
         self.title = "News"
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.rightBarButtonItem = filterButton
-        navigationItem.rightBarButtonItem?.tintColor = .black
+        navigationItem.rightBarButtonItems = [filterButton]
+        filterButton.tintColor = .black
         
     }
     
@@ -87,7 +86,6 @@ extension RootViewController: UITableViewDelegate, UITableViewDataSource {
         if let url = article.url {
             viewController.url = url
         }
-
         navigationController?.pushViewController(viewController, animated: true)
         
     }
@@ -97,16 +95,15 @@ extension RootViewController: UITableViewDelegate, UITableViewDataSource {
 extension RootViewController {
     
     func fetchHeadlines(keyword: String = "",
-                       country: String = "",
-                       category: Category = .general,
-                       pageSize: Int = 20,
-                       page: Int = 1) {
-        var data = [Article]()
+                        country: String = "",
+                        category: Category = .general,
+                        pageSize: Int = 20,
+                        page: Int = 1) {
         DispatchQueue.global().async {
             self.serviceHeadline.fetchTopHeadline(keyword: keyword, country: country, category: category, pageSize: pageSize, page:  page) { result in
                 switch result {
                 case .success(let news):
-                    data = news.articles ?? []
+                    let data = news.articles ?? []
                     self.updateTableView(with: data)
                 case .failure(let error):
                     print(error)
@@ -127,12 +124,12 @@ extension RootViewController {
                          sortBy: Sorting = .publishedAt,
                          pageSize: Int = 20,
                          page: Int = 1) {
-        var data = [Article]()
+        
         DispatchQueue.global().async {
-            self.serviceEverythong.fetchEverything(keyword: keyword, keywordTitle: keywordTitle, sources: sources, domains: domains, excludeDomains: excludeDomains, from: from, to: to, language: language, sortBy: sortBy, pageSize: pageSize, page: page) { result in
+            self.serviceEverythong.fetchEverything(keyword: keyword, keywordTitle: keywordTitle, sources: sources, from: from, to: to, language: language, sortBy: sortBy, pageSize: pageSize, page: page) { result in
                 switch result {
                 case .success(let news):
-                    data = news.articles ?? []
+                    let data = news.articles ?? []
                     self.updateTableView(with: data)
                 case .failure(let error):
                     print(error)
@@ -176,7 +173,10 @@ extension RootViewController: UISearchBarDelegate {
             fetchHeadlines()
         }
     }
-    
-    
 
+}
+
+enum SopeOptions: String, CaseIterable {
+    case topHeadline = "Top Headlines"
+    case everything  = "Everything"
 }
