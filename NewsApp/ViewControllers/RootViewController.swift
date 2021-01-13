@@ -9,11 +9,12 @@ import UIKit
 
 class RootViewController: UIViewController {
 
-    private let serviceHeadline = TopHeadlineService()
-    private let serviceEverythong = EverythingService()
     private let searchController = UISearchController(searchResultsController: nil)
     var tableView = UITableView()
     var articles = [Article]()
+    private var requestOptions = RequestOptions()
+    
+    private var service: ParseProtocol?
     
     struct Cells {
         static let articleCell = "ArticleCell"
@@ -24,7 +25,7 @@ class RootViewController: UIViewController {
         configureNavController()
         configureSearchBar()
         configureTableView()
-        fetchHeadlines()
+        fetchArticles(type: .topHeadline, options: requestOptions)
     }
     
 
@@ -38,7 +39,7 @@ class RootViewController: UIViewController {
     func configureSearchBar() {
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = true
-        let items = SopeOptions.allCases.map { $0.rawValue }
+        let items = ScopeOptions.allCases.map { $0.rawValue }
         searchController.searchBar.scopeButtonTitles = items
         searchController.searchBar.delegate = self
     }
@@ -94,39 +95,12 @@ extension RootViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension RootViewController {
     
-    func fetchHeadlines(keyword: String = "",
-                        country: String = "",
-                        category: Category = .general,
-                        pageSize: Int = 20,
-                        page: Int = 1) {
+    func fetchArticles(type: ScopeOptions,
+                       options: RequestOptions,
+                       page: Int = 1) {
+        self.service = NewsService()
         DispatchQueue.global().async {
-            self.serviceHeadline.fetchTopHeadline(keyword: keyword, country: country, category: category, pageSize: pageSize, page:  page) { result in
-                switch result {
-                case .success(let news):
-                    let data = news.articles ?? []
-                    self.updateTableView(with: data)
-                case .failure(let error):
-                    print(error)
-                }
-            }
-        }
-
-    }
-    
-    func fetchEverything(keyword: String = "",
-                         keywordTitle: String = "",
-                         sources: String = "",
-                         domains: String = "",
-                         excludeDomains: String = "",
-                         from: String = "",
-                         to: String = "",
-                         language: String = "",
-                         sortBy: Sorting = .publishedAt,
-                         pageSize: Int = 20,
-                         page: Int = 1) {
-        
-        DispatchQueue.global().async {
-            self.serviceEverythong.fetchEverything(keyword: keyword, keywordTitle: keywordTitle, sources: sources, from: from, to: to, language: language, sortBy: sortBy, pageSize: pageSize, page: page) { result in
+            self.service?.fetchArticles(type: type, options: options, page: page) { result in
                 switch result {
                 case .success(let news):
                     let data = news.articles ?? []
@@ -151,32 +125,37 @@ extension RootViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let text = searchBar.text {
+            requestOptions.keyword = text
             switch searchBar.selectedScopeButtonIndex {
             case 0:
-                fetchHeadlines(keyword: text)
+                fetchArticles(type: .topHeadline, options: requestOptions)
             case 1:
-                fetchEverything(keyword: text)
+                fetchArticles(type: .everything, options: requestOptions)
             default:
-                fetchHeadlines(keyword: text)
+                fetchArticles(type: .topHeadline, options: requestOptions)
             }
             
         }
     }
     
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        
         switch selectedScope {
         case 0:
-            fetchHeadlines()
+            requestOptions = RequestOptions()
+            fetchArticles(type: .topHeadline, options: requestOptions)
         case 1:
-            fetchEverything()
+            requestOptions = RequestOptions()
+            updateTableView(with: [])
         default:
-            fetchHeadlines()
+            requestOptions = RequestOptions()
+            fetchArticles(type: .topHeadline, options: requestOptions)
         }
     }
 
 }
 
-enum SopeOptions: String, CaseIterable {
+enum ScopeOptions: String, CaseIterable {
     case topHeadline = "Top Headlines"
     case everything  = "Everything"
 }
