@@ -9,7 +9,6 @@ import UIKit
 
 class FilterViewController: UIViewController {
 
-    
     @IBOutlet weak var headlineLable: UILabel!
     @IBOutlet weak var everythingLable: UILabel!
     @IBOutlet weak var commonLable: UILabel!
@@ -53,54 +52,40 @@ class FilterViewController: UIViewController {
     }
     
     func configureDatePickers() {
-        let toolbar = UIToolbar()
-        toolbar.sizeToFit()
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(donePressed))
-        toolbar.setItems([doneButton], animated: true)
-        fromField.inputAccessoryView = toolbar
-        toField.inputAccessoryView = toolbar
-        
-        fromDatePicker.datePickerMode = .date
-        fromDatePicker.preferredDatePickerStyle = .wheels
-        
-        toDatePicker.datePickerMode = .date
-        toDatePicker.preferredDatePickerStyle = .wheels
-        
-        fromField.inputView = fromDatePicker
-        toField.inputView = toDatePicker
-      //  fromField.placeholder = "from"
-      //  toField.placeholder = "to"
+        fromDatePicker.setupDatePicker(name: "from", textField: fromField, selector: #selector(doneFromPressed))
+        toDatePicker.setupDatePicker(name: "to", textField: toField, selector: #selector(doneToPressed))
     }
+    
 
     @objc
-    func donePressed() {
-        
+    func doneFromPressed() {
+        fromField.text = "\(fromDatePicker.date)"
+        view.endEditing(true)
+    }
+    
+    @objc
+    func doneToPressed() {
+        toField.text = "\(toDatePicker.date)"
+        view.endEditing(true)
     }
     
     func configurePikers() {
-        countryField.inputView = countryPeakerView
-        categoryField.inputView = categoryPeakerView
-        languageField.inputView = languagePeakerView
-        sortField.inputView = sortPeakerView
-        
+
         countryField.placeholder = "Select Country"
         categoryField.placeholder = "Select Category"
         languageField.placeholder = "Select Language"
         sortField.placeholder = "Select Sorting"
         
-        countryField.textAlignment = .center
-        categoryField.textAlignment = .center
-        languageField.textAlignment = .center
-        sortField.textAlignment = .center
-        
-        setPickerViewDelegates(pickerView: countryPeakerView)
-        setPickerViewDelegates(pickerView: categoryPeakerView)
-        setPickerViewDelegates(pickerView: languagePeakerView)
-        setPickerViewDelegates(pickerView: sortPeakerView)
+        setPickerViewDelegates(pickerView: countryPeakerView, textField: countryField)
+        setPickerViewDelegates(pickerView: categoryPeakerView, textField: categoryField)
+        setPickerViewDelegates(pickerView: languagePeakerView, textField: languageField)
+        setPickerViewDelegates(pickerView: sortPeakerView, textField: sortField)
         
     }
     
-    func setPickerViewDelegates(pickerView: UIPickerView) {
+    func setPickerViewDelegates(pickerView: UIPickerView, textField: UITextField) {
+        textField.inputView = pickerView
+        textField.textAlignment = .center
         pickerView.delegate = self
         pickerView.dataSource = self
         pickerView.tag = FilterViewController.getUniqueIdentifier()
@@ -169,7 +154,7 @@ extension FilterViewController: UIPickerViewDataSource, UIPickerViewDelegate {
         switch pickerView.tag {
         case countryPeakerView.tag:
             let items = Country.allCases.map { $0.rawValue }
-            countryField.text = items[row]
+            countryField.text = countryName(countryCode: items[row])
             countryField.resignFirstResponder()
         case categoryPeakerView.tag:
             let items = Category.allCases.map { $0.rawValue }
@@ -187,5 +172,7 @@ extension FilterViewController: UIPickerViewDataSource, UIPickerViewDelegate {
             return 
         }
     }
+    
+    
     
 }
