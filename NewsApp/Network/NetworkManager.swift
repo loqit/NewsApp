@@ -44,10 +44,9 @@ class NetworkManager {
                          path: NetworkConstants,
                          params: [String: Any],
                          encoding: ParameterEncoding = URLEncoding.default,
-                         completion: @escaping (Result<T, NetworkError>) -> Void) -> DataRequest{
+                         completion: @escaping (Result<T, NetworkError>) -> Void) -> DataRequest {
         
         let pathString = baseUrl.rawValue + path.rawValue
-        print(params)
         let request = {
             return AF.request(pathString,
                               method: method,

@@ -26,7 +26,7 @@ enum Language: String, CaseIterable {
     
     static func getCurrLanguage() -> Language {
         let code = String(Locale.preferredLanguages[0].prefix(2))
-        print(code)
+
         for lang in Language.allCases {
             if code == lang.rawValue {
                 return lang
@@ -42,6 +42,7 @@ enum Country: String, CaseIterable {
     static func getCurLocation() -> Country {
         var code = Locale.current.regionCode
         code = code?.lowercased()
+        print(code)
         for country in Country.allCases {
             if code == country.rawValue {
                 return country

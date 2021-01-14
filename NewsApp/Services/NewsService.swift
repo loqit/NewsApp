@@ -45,7 +45,7 @@ class NewsService: ParseProtocol {
     }
 }
 
-enum Sorting: String {
+enum Sorting: String, CaseIterable {
     case relevancy
     case popularity
     case publishedAt
