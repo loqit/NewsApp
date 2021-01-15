@@ -32,6 +32,7 @@ class RootViewController: UIViewController {
     @objc
     private func toFilter() {
         let vc = FilterViewController()
+        vc.delegate = self
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true) 
     }
@@ -118,6 +119,23 @@ extension RootViewController {
             self.articles = data
             self.tableView.reloadData()
         }
+    }
+}
+
+extension RootViewController: OptionsDelegate {
+    
+    func setOptions(with requestOptions: RequestOptions) {
+        print(requestOptions)
+        self.requestOptions = requestOptions
+        switch searchController.searchBar.selectedScopeButtonIndex {
+        case 0:
+            fetchArticles(type: .topHeadline, options: requestOptions)
+        case 1:
+            fetchArticles(type: .everything, options: requestOptions)
+        default:
+            fetchArticles(type: .everything, options: requestOptions)
+        }
+        self.tableView.reloadData()
     }
 }
 

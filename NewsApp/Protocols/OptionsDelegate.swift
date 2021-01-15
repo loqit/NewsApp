@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol OptionsDelegate {
-    func setOptions()
+protocol OptionsDelegate: class {
+    func setOptions(with requestOptions: RequestOptions)
 }

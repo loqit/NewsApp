@@ -30,6 +30,9 @@ class FilterViewController: UIViewController {
     let fromDatePicker = UIDatePicker()
     let toDatePicker = UIDatePicker()
     
+    private var requestOptions = RequestOptions()
+    weak var delegate: OptionsDelegate?
+    
     static var pickerIdentifier = 0
     
     override func viewDidLoad() {
@@ -38,6 +41,28 @@ class FilterViewController: UIViewController {
         configurePikers()
         configureLables()
         configureDatePickers()
+        configureNavController()
+    }
+    
+    func configureNavController() {
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(applyOptions))
+        let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelOptions))
+        navigationItem.rightBarButtonItem = doneButton
+        navigationItem.leftBarButtonItem = cancelButton
+    }
+    
+    @objc
+    func applyOptions() {
+        
+        navigationController?.popViewController(animated: true)
+        delegate?.setOptions(with: requestOptions)
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @objc
+    func cancelOptions() {
+        navigationController?.popViewController(animated: true)
+        dismiss(animated: true, completion: nil)
     }
     
     func configureLables() {
@@ -60,12 +85,14 @@ class FilterViewController: UIViewController {
     @objc
     func doneFromPressed() {
         fromField.text = "\(fromDatePicker.date)"
+        //requestOptions.from = "\(fromDatePicker.date)"
         view.endEditing(true)
     }
     
     @objc
     func doneToPressed() {
         toField.text = "\(toDatePicker.date)"
+        //requestOptions.to = "\(toDatePicker.date)"
         view.endEditing(true)
     }
     
@@ -91,18 +118,6 @@ class FilterViewController: UIViewController {
         pickerView.tag = FilterViewController.getUniqueIdentifier()
     }
     
-    private func setOptions(with requestOptions: RequestOptions) {
-        // TopHeadlines
-        // country(choose), category(choose)
-        
-        // Everything
-        // from(enter), to(enter), language(choose), sortBy(choose), source(choose)
-        
-        // Common
-        // pageSize(enter)
-        
-        // return struct with this options (RequestOptions)
-    }
     func countryName(countryCode: String) -> String? {
        // let lang = Language.getCurrLanguage()
         let current = Locale(identifier: "en_US")
@@ -154,18 +169,22 @@ extension FilterViewController: UIPickerViewDataSource, UIPickerViewDelegate {
         switch pickerView.tag {
         case countryPeakerView.tag:
             let items = Country.allCases.map { $0.rawValue }
+            requestOptions.country = Country(rawValue: items[row]) ?? .none
             countryField.text = countryName(countryCode: items[row])
             countryField.resignFirstResponder()
         case categoryPeakerView.tag:
             let items = Category.allCases.map { $0.rawValue }
+            requestOptions.category = Category(rawValue: items[row])
             categoryField.text = items[row]
             categoryField.resignFirstResponder()
         case languagePeakerView.tag:
             let items = Language.allCases.map { $0.rawValue }
+            requestOptions.language = Language(rawValue: items[row]) ?? .en
             languageField.text = items[row]
             languageField.resignFirstResponder()
         case sortPeakerView.tag:
             let items = Sorting.allCases.map { $0.rawValue }
+            requestOptions.sortBy = Sorting(rawValue: items[row]) ?? .publishedAt
             sortField.text = items[row]
             sortField.resignFirstResponder()
         default:
