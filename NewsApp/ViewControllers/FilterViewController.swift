@@ -26,6 +26,7 @@ class FilterViewController: UIViewController {
     var categoryPeakerView = UIPickerView()
     var languagePeakerView = UIPickerView()
     var sortPeakerView = UIPickerView()
+    var sourcePeakerView = UIPickerView()
     
     let fromDatePicker = UIDatePicker()
     let toDatePicker = UIDatePicker()
@@ -33,6 +34,11 @@ class FilterViewController: UIViewController {
     private var requestOptions = RequestOptions()
     weak var delegate: OptionsDelegate?
     
+    // Array of all available sources
+    private var sourcesData = [FullSource]()
+    private var service: SourceProtocol?
+    
+    // PickerView Identifier
     static var pickerIdentifier = 0
     
     override func viewDidLoad() {
@@ -42,6 +48,7 @@ class FilterViewController: UIViewController {
         configureLables()
         configureDatePickers()
         configureNavController()
+        fetchSources()
     }
     
     func configureNavController() {
@@ -102,7 +109,9 @@ class FilterViewController: UIViewController {
         categoryField.placeholder = "Select Category"
         languageField.placeholder = "Select Language"
         sortField.placeholder = "Select Sorting"
+        sourceField.placeholder = "Select Source"
         
+        setPickerViewDelegates(pickerView: sourcePeakerView, textField: sourceField)
         setPickerViewDelegates(pickerView: countryPeakerView, textField: countryField)
         setPickerViewDelegates(pickerView: categoryPeakerView, textField: categoryField)
         setPickerViewDelegates(pickerView: languagePeakerView, textField: languageField)
@@ -141,6 +150,8 @@ extension FilterViewController: UIPickerViewDataSource, UIPickerViewDelegate {
             return Language.allCases.count
         case sortPeakerView.tag:
             return Sorting.allCases.count
+        case sourcePeakerView.tag:
+            return sourcesData.count
         default:
             return 1
         }
@@ -160,6 +171,8 @@ extension FilterViewController: UIPickerViewDataSource, UIPickerViewDelegate {
         case sortPeakerView.tag:
             let items = Sorting.allCases.map { $0.rawValue }
             return items[row]
+        case sourcePeakerView.tag:
+            return sourcesData[row].name
         default:
             return "Not found"
         }
@@ -187,6 +200,10 @@ extension FilterViewController: UIPickerViewDataSource, UIPickerViewDelegate {
             requestOptions.sortBy = Sorting(rawValue: items[row]) ?? .publishedAt
             sortField.text = items[row]
             sortField.resignFirstResponder()
+        case sourcePeakerView.tag:
+            requestOptions.source = sourcesData[row].id ?? ""
+            sourceField.text = sourcesData[row].name
+            sourceField.resignFirstResponder()
         default:
             return 
         }
@@ -194,4 +211,29 @@ extension FilterViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     
     
     
+}
+
+extension FilterViewController {
+    func fetchSources() {
+        self.service = SourceService()
+        DispatchQueue.global().async {
+            self.service?.fetchSources(country: "", category: nil, language: "") { result in
+                switch result {
+                case .success(let sources):
+                    let data = sources.sources ?? []
+                    self.updateSources(with: data)
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        }
+    }
+    
+    func updateSources(with data: [FullSource]) {
+        DispatchQueue.main.async {
+            self.sourcesData = data
+            self.sourcePeakerView.reloadAllComponents()
+            self.sourcePeakerView.reloadInputViews()
+        }
+    }
 }

@@ -7,18 +7,19 @@
 
 import Foundation
 
-class SourceService {
+class SourceService: SourceProtocol {
     
     private let networkManager = NetworkManager.shared
     
-    func fetchTopHeadline(country: String = "",
-                          category: Category = .general,
+    func fetchSources(    country: String = "",
+                          category: Category? = nil,
                           language: String = "",
                           completion: @escaping (Result<Sources, NetworkError>) -> Void) {
         
         let params = ["country" : country,
-                      "category" : category,
+                      "category": category ?? "",
                       "language": language] as [String : Any]
+        print(params)
         self.networkManager.get(path: .sourceUrl,
                                 params: params as [String : Any],
                                 completion: completion)
