@@ -54,15 +54,17 @@ class NetworkManager {
                               encoding: encoding,
                               headers: self.headers)
         }
-        
+        print("2")
         return request().validate().responseDecodable(of: T.self) { response in
             if let error = response.error {
                 print(error)
                 completion(.failure(.unableToComplite))
                 return
             }
+            
             if let data = response.data {
                 let decoder = JSONDecoder()
+                
                 if let object = try? decoder.decode(T.self, from: data) {
                     completion(.success(object))
                     return
@@ -74,24 +76,4 @@ class NetworkManager {
             }
         }
     }
-    
-    
-    func newJSONDecoder() -> JSONDecoder {
-        let decoder = JSONDecoder()
-        if #available(iOS 10.0, OSX 10.12, tvOS 10.0, watchOS 3.0, *) {
-            decoder.dateDecodingStrategy = .iso8601
-        }
-        return decoder
-    }
-
-    func newJSONEncoder() -> JSONEncoder {
-        let encoder = JSONEncoder()
-        if #available(iOS 10.0, OSX 10.12, tvOS 10.0, watchOS 3.0, *) {
-            encoder.dateEncodingStrategy = .iso8601
-        }
-        return encoder
-    }
-
-
 }
-// MARK: - Alamofire response handlers

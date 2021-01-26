@@ -21,3 +21,4 @@ struct Article: Codable {
         case url, urlToImage, publishedAt, content
     }
 }
+

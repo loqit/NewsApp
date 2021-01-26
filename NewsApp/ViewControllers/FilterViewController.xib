@@ -4,20 +4,17 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FilterViewController" customModule="NewsApp" customModuleProvider="target">
             <connections>
                 <outlet property="categoryField" destination="HAP-S1-xqn" id="qLh-5F-PX2"/>
-                <outlet property="commonLable" destination="yyx-tb-rPH" id="xDJ-Jq-5g3"/>
                 <outlet property="countryField" destination="f6H-jQ-7of" id="LLq-Rh-y1S"/>
                 <outlet property="everythingLable" destination="h6m-Ht-s5T" id="Xs6-X8-du1"/>
                 <outlet property="fromField" destination="0fz-DU-yzV" id="GI6-SK-hLi"/>
                 <outlet property="headlineLable" destination="2En-v8-wOF" id="18O-lQ-2JV"/>
                 <outlet property="languageField" destination="t0C-XT-KuY" id="BR0-GK-Ofb"/>
-                <outlet property="pageSizeField" destination="XiF-KJ-URp" id="EyR-xa-YyS"/>
                 <outlet property="sortField" destination="Il9-e9-Iqb" id="5Jp-6B-Ee3"/>
                 <outlet property="sourceField" destination="mlu-AQ-ZrD" id="qlu-WF-EA0"/>
                 <outlet property="toField" destination="LMv-75-b21" id="fvt-G2-b7B"/>
@@ -41,7 +38,7 @@
                 </textField>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2En-v8-wOF">
                     <rect key="frame" x="40" y="74" width="334" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
@@ -72,24 +69,13 @@
                 </textField>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h6m-Ht-s5T">
                     <rect key="frame" x="40" y="253" width="334" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <nil key="textColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XiF-KJ-URp">
-                    <rect key="frame" x="40" y="644.5" width="334" height="34"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <textInputTraits key="textInputTraits"/>
-                </textField>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yyx-tb-rPH">
-                    <rect key="frame" x="40" y="594" width="334" height="20.5"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
-            <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="HAP-S1-xqn" secondAttribute="trailing" constant="40" id="0tD-Gs-kUJ"/>
                 <constraint firstItem="h6m-Ht-s5T" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="40" id="1pD-Gf-6rm"/>
@@ -110,27 +96,16 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="2En-v8-wOF" secondAttribute="trailing" constant="40" id="SJj-Sh-PCu"/>
                 <constraint firstItem="h6m-Ht-s5T" firstAttribute="top" secondItem="HAP-S1-xqn" secondAttribute="bottom" constant="40" id="TE1-Rb-6F9"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="LMv-75-b21" secondAttribute="trailing" constant="40" id="TNb-hk-fXU"/>
-                <constraint firstItem="yyx-tb-rPH" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="40" id="TRB-yw-yBC"/>
                 <constraint firstItem="LMv-75-b21" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="40" id="Ung-8T-dPj"/>
                 <constraint firstItem="t0C-XT-KuY" firstAttribute="top" secondItem="LMv-75-b21" secondAttribute="bottom" constant="20" id="Vko-9Z-baP"/>
                 <constraint firstItem="t0C-XT-KuY" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="40" id="c8Z-fh-46i"/>
-                <constraint firstItem="XiF-KJ-URp" firstAttribute="top" secondItem="yyx-tb-rPH" secondAttribute="bottom" constant="30" id="cEP-Sc-JkG"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="yyx-tb-rPH" secondAttribute="trailing" constant="40" id="e7l-Zl-vfQ"/>
                 <constraint firstItem="mlu-AQ-ZrD" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="40" id="enn-6u-7qK"/>
                 <constraint firstItem="HAP-S1-xqn" firstAttribute="top" secondItem="f6H-jQ-7of" secondAttribute="bottom" constant="20" id="gir-cu-q95"/>
                 <constraint firstItem="f6H-jQ-7of" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="40" id="hun-Q4-Ct4"/>
                 <constraint firstItem="LMv-75-b21" firstAttribute="top" secondItem="0fz-DU-yzV" secondAttribute="bottom" constant="20" id="o2s-1h-31E"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Il9-e9-Iqb" secondAttribute="trailing" constant="40" id="pFe-JB-Ddd"/>
-                <constraint firstItem="XiF-KJ-URp" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="40" id="sHb-ex-Iv0"/>
-                <constraint firstItem="yyx-tb-rPH" firstAttribute="top" secondItem="Il9-e9-Iqb" secondAttribute="bottom" constant="40" id="sKt-ix-UUB"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="XiF-KJ-URp" secondAttribute="trailing" constant="40" id="wMt-UE-Ssx"/>
             </constraints>
             <point key="canvasLocation" x="-146.37681159420291" y="60.9375"/>
         </view>
     </objects>
-    <resources>
-        <systemColor name="opaqueSeparatorColor">
-            <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-    </resources>
 </document>

@@ -9,8 +9,8 @@ import Foundation
 
 enum NetworkConstants: String {
     
-    case baseUrl = "https://newsapi.org/v2/"
-    case topHeadlinesUrl = "top-headlines"
-    case everythingUrl = "everything"
-    case sourceUrl = "sources"
+    case baseUrl            = "https://newsapi.org/v2/"
+    case topHeadlinesUrl    = "top-headlines"
+    case everythingUrl      = "everything"
+    case sourceUrl          = "sources"
 }

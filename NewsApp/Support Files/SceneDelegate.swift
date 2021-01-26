@@ -18,12 +18,41 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = UIWindow(windowScene: windowScene)
         self.window?.makeKeyAndVisible()
         
-        let navigationController = UINavigationController()
-        
-        navigationController.viewControllers = [RootViewController()]
-        self.window?.rootViewController = navigationController
+        self.window?.rootViewController = createTabBarController()
     }
 
+    func createHeadlineController() -> UINavigationController {
+        let headlineVC = RootViewController()
+        let button = UITabBarItem(tabBarSystemItem: .recents, tag: 1)
+        button.title = "Top Headline"
+        headlineVC.tabBarItem = button
+        
+        return UINavigationController(rootViewController: headlineVC)
+    }
+    
+    func createSearchController() -> UINavigationController {
+        let searchVC = SearchViewController()
+        let button = UITabBarItem(tabBarSystemItem: .search, tag: 2)
+        searchVC.tabBarItem = button
+        
+        return UINavigationController(rootViewController: searchVC)
+    }
+    
+    func createBookmarkController() -> UINavigationController {
+        let bookmarkVC = BookmarkViewController()
+        bookmarkVC.title = "Bookmarks"
+        bookmarkVC.tabBarItem = UITabBarItem(tabBarSystemItem: .bookmarks, tag: 3)
+        return UINavigationController(rootViewController: bookmarkVC)
+    }
+    
+    func createTabBarController() -> UITabBarController {
+        let tabBar = UITabBarController()
+        UITabBar.appearance().tintColor = .black
+        tabBar.viewControllers = [createHeadlineController(), createSearchController(), createBookmarkController()]
+        
+        return tabBar
+    }
+    
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.

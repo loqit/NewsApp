@@ -9,6 +9,8 @@ import UIKit
 
 class ArticleCell: UITableViewCell {
 
+    static let identifier = "ArticleCell"
+    
     @IBOutlet weak var articleImageView: UIImageView!
     @IBOutlet weak var articleTitleView: UILabel!
     @IBOutlet weak var articleDescView: UILabel!
@@ -23,15 +25,29 @@ class ArticleCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    @IBAction func addToFav(_ sender: UIButton) {
+
+    @IBOutlet weak var bookmarkButton: UIButton!
+    
+    @IBAction func bookmarkTapped(_ sender: UIButton) {
     }
     
     func set(article: Article) {
         
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd MMM yyyy HH:mm:ss Z"
+        var date = Date()
+        var dateStr = ""
+        if let str = article.publishedAt {
+            
+            date = dateFormatter.date(from: str) ?? Date()
+            dateFormatter.dateFormat = "dd MMM, YYYY"
+            dateStr = dateFormatter.string(from: date)
+        }
+        
         articleTitleView?.text = article.title
         articleDescView?.text = article.articleDescription
         articleDescView.backgroundColor = .clear
-        articleDateView?.text = article.publishedAt
+        articleDateView?.text = dateStr
         if let url = article.urlToImage {
             articleImageView?.loadImageUsingCache(withUrl: url)
         }

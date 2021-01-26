@@ -11,7 +11,6 @@ class FilterViewController: UIViewController {
 
     @IBOutlet weak var headlineLable: UILabel!
     @IBOutlet weak var everythingLable: UILabel!
-    @IBOutlet weak var commonLable: UILabel!
     
     @IBOutlet weak var countryField: UITextField!
     @IBOutlet weak var categoryField: UITextField!
@@ -20,7 +19,6 @@ class FilterViewController: UIViewController {
     @IBOutlet weak var languageField: UITextField!
     @IBOutlet weak var sourceField: UITextField!
     @IBOutlet weak var sortField: UITextField!
-    @IBOutlet weak var pageSizeField: UITextField!
     
     var countryPeakerView = UIPickerView()
     var categoryPeakerView = UIPickerView()
@@ -75,7 +73,6 @@ class FilterViewController: UIViewController {
     func configureLables() {
         headlineLable.text = "Top Headline options"
         everythingLable.text = "Everything options"
-        commonLable.text = "Commom options"
     }
     
     static func getUniqueIdentifier() -> Int {
@@ -84,38 +81,62 @@ class FilterViewController: UIViewController {
     }
     
     func configureDatePickers() {
-        fromDatePicker.setupDatePicker(name: "from", textField: fromField, selector: #selector(doneFromPressed))
-        toDatePicker.setupDatePicker(name: "to", textField: toField, selector: #selector(doneToPressed))
+        
+        fromDatePicker.setupDatePicker(textField: fromField, selector: #selector(doneFromPressed))
+        toDatePicker.setupDatePicker(textField: toField, selector: #selector(doneToPressed))
+        
+        //fromDatePicker.tag = FilterViewController.getUniqueIdentifier()
     }
     
 
     @objc
     func doneFromPressed() {
-        fromField.text = "\(fromDatePicker.date)"
-        //requestOptions.from = "\(fromDatePicker.date)"
+        
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        
+        fromField.text = formatter.string(from: fromDatePicker.date)
+        requestOptions.from = "\(fromDatePicker.date)"
         view.endEditing(true)
     }
     
     @objc
     func doneToPressed() {
-        toField.text = "\(toDatePicker.date)"
-        //requestOptions.to = "\(toDatePicker.date)"
+        
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        
+        toField.text = formatter.string(from: toDatePicker.date)
+        requestOptions.to = "\(toDatePicker.date)"
         view.endEditing(true)
     }
     
     func configurePikers() {
-
-        countryField.placeholder = "Select Country"
-        categoryField.placeholder = "Select Category"
-        languageField.placeholder = "Select Language"
-        sortField.placeholder = "Select Sorting"
-        sourceField.placeholder = "Select Source"
+        
+        setTextFieldStyle(textField: countryField, text: "Contry")
+        setTextFieldStyle(textField: categoryField, text: "Category")
+        setTextFieldStyle(textField: languageField, text: "Language")
+        setTextFieldStyle(textField: sortField, text: "Sorting")
+        setTextFieldStyle(textField: sourceField, text: "Source")
+        setTextFieldStyle(textField: fromField, text: "from date")
+        setTextFieldStyle(textField: toField, text: "to date")
         
         setPickerViewDelegates(pickerView: sourcePeakerView, textField: sourceField)
         setPickerViewDelegates(pickerView: countryPeakerView, textField: countryField)
         setPickerViewDelegates(pickerView: categoryPeakerView, textField: categoryField)
         setPickerViewDelegates(pickerView: languagePeakerView, textField: languageField)
         setPickerViewDelegates(pickerView: sortPeakerView, textField: sortField)
+        
+    }
+    
+    func setTextFieldStyle(textField: UITextField, text: String) {
+        textField.placeholder = "Select " + text
+        textField.layer.cornerRadius = 15.0
+        textField.layer.borderWidth = 1.0
+        textField.layer.borderColor = UIColor.lightGray.cgColor
+        textField.layer.masksToBounds = true
         
     }
     

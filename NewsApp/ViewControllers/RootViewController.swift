@@ -10,15 +10,18 @@ import UIKit
 class RootViewController: UIViewController {
 
     private let searchController = UISearchController(searchResultsController: nil)
-    var tableView = UITableView()
-    var articles = [Article]()
-    private var requestOptions = RequestOptions()
+    private var tableView = UITableView()
     
+    private var collectionView: UICollectionView?
+    private let mainScrollView = UIScrollView()
+    
+    private var articles = [Article]()
+    private var requestOptions = RequestOptions()
     private var service: ParseProtocol?
     
-    struct Cells {
-        static let articleCell = "ArticleCell"
-    }
+    // MARK: - CoreData context
+    private let coreDataContainer = AppDelegate.persistentContainer
+    private let context = AppDelegate.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,9 +29,15 @@ class RootViewController: UIViewController {
         configureSearchBar()
         configureTableView()
         fetchArticles(type: .topHeadline, options: requestOptions)
+        
     }
     
-
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+       // configureMainScrollView()
+    }
+    
+    // Go to FilterViewController
     @objc
     private func toFilter() {
         let vc = FilterViewController()
@@ -40,8 +49,9 @@ class RootViewController: UIViewController {
     func configureSearchBar() {
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = true
-        let items = ScopeOptions.allCases.map { $0.rawValue }
-        searchController.searchBar.scopeButtonTitles = items
+        //let items = ScopeOptions.allCases.map { $0.rawValue }
+        //searchController.searchBar.scopeButtonTitles = items
+        
         searchController.searchBar.delegate = self
     }
     
@@ -56,12 +66,18 @@ class RootViewController: UIViewController {
     }
     
     func configureTableView() {
-        self.view.addSubview(tableView)
+        view.addSubview(tableView)
+        //mainScrollView.contentSize = tableView.bounds.size
+        //mainScrollView.addSubview(tableView)
+        
+        
         setTableViewDelegates()
         tableView.rowHeight = 370
-        tableView.register(UINib(nibName: Cells.articleCell, bundle: nil), forCellReuseIdentifier: Cells.articleCell)
+        tableView.register(UINib(nibName: ArticleCell.identifier, bundle: nil), forCellReuseIdentifier: ArticleCell.identifier)
         tableView.pin(to: view)
         tableView.backgroundColor = .clear
+        tableView.separatorStyle = .none
+        
         
     }
 
@@ -77,7 +93,7 @@ extension RootViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Cells.articleCell) as! ArticleCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: ArticleCell.identifier) as! ArticleCell
         let article = articles[indexPath.row]
         cell.set(article: article)
         return cell
@@ -94,6 +110,7 @@ extension RootViewController: UITableViewDelegate, UITableViewDataSource {
     
 }
 
+// MARK: - Fetch Articles
 extension RootViewController {
     
     func fetchArticles(type: ScopeOptions,
@@ -104,8 +121,10 @@ extension RootViewController {
             self.service?.fetchArticles(type: type, options: options, page: page) { result in
                 switch result {
                 case .success(let news):
-                    let data = news.articles ?? []
-                    self.updateTableView(with: data)
+                    if let data = news.articles {
+                        print(data)
+                        self.updateTableView(with: data)
+                    }
                 case .failure(let error):
                     print(error)
                 }
@@ -124,18 +143,14 @@ extension RootViewController {
 
 extension RootViewController: OptionsDelegate {
     
+    // MARK: - Get options from FilterViewController
+    
     func setOptions(with requestOptions: RequestOptions) {
-        print(requestOptions)
         self.requestOptions = requestOptions
-        switch searchController.searchBar.selectedScopeButtonIndex {
-        case 0:
-            fetchArticles(type: .topHeadline, options: requestOptions)
-        case 1:
-            fetchArticles(type: .everything, options: requestOptions)
-        default:
-            fetchArticles(type: .everything, options: requestOptions)
+        fetchArticles(type: .topHeadline, options: requestOptions)
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
         }
-        self.tableView.reloadData()
     }
 }
 
@@ -144,34 +159,11 @@ extension RootViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let text = searchBar.text {
             requestOptions.keyword = text
-            switch searchBar.selectedScopeButtonIndex {
-            case 0:
-                fetchArticles(type: .topHeadline, options: requestOptions)
-            case 1:
-                fetchArticles(type: .everything, options: requestOptions)
-            default:
-                fetchArticles(type: .topHeadline, options: requestOptions)
-            }
-            
-        }
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        
-        switch selectedScope {
-        case 0:
-            requestOptions = RequestOptions()
-            fetchArticles(type: .topHeadline, options: requestOptions)
-        case 1:
-            requestOptions = RequestOptions()
-            updateTableView(with: [])
-        default:
-            requestOptions = RequestOptions()
             fetchArticles(type: .topHeadline, options: requestOptions)
         }
     }
-
 }
+
 
 enum ScopeOptions: String, CaseIterable {
     case topHeadline = "Top Headlines"

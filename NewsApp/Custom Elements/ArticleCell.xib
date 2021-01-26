@@ -41,7 +41,7 @@
                         <rect key="frame" x="269" y="191" width="35" height="25"/>
                         <state key="normal" image="bookmark"/>
                         <connections>
-                            <action selector="addToFav:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="V4b-dj-hJx"/>
+                            <action selector="bookmarkTapped:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="hoy-da-deM"/>
                         </connections>
                     </button>
                 </subviews>
@@ -73,6 +73,7 @@
                 <outlet property="articleDescView" destination="4R9-8z-pYh" id="2vf-KI-YOo"/>
                 <outlet property="articleImageView" destination="oGM-b3-qJT" id="LPm-Rj-sal"/>
                 <outlet property="articleTitleView" destination="DYQ-zK-CZg" id="pn4-0B-26b"/>
+                <outlet property="bookmarkButton" destination="Idd-Uu-QSS" id="mlv-Hb-hCg"/>
             </connections>
             <point key="canvasLocation" x="-146.37681159420291" y="51.5625"/>
         </tableViewCell>
