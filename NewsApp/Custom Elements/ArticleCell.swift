@@ -10,6 +10,10 @@ import UIKit
 class ArticleCell: UITableViewCell {
 
     static let identifier = "ArticleCell"
+    weak var delegate: ArticleCellDelegate?
+    lazy private var article = Article()
+
+    
     
     @IBOutlet weak var articleImageView: UIImageView!
     @IBOutlet weak var articleTitleView: UILabel!
@@ -29,10 +33,14 @@ class ArticleCell: UITableViewCell {
     @IBOutlet weak var bookmarkButton: UIButton!
     
     @IBAction func bookmarkTapped(_ sender: UIButton) {
+       
+        article.isBookmark = !article.isBookmark
+       
+        delegate?.bookmarkTapped(on: article)
     }
     
     func set(article: Article) {
-        
+        self.article = article
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd MMM yyyy HH:mm:ss Z"
         var date = Date()

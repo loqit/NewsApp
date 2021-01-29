@@ -64,7 +64,7 @@ class SearchViewController: UIViewController {
 }
 
 extension SearchViewController {
-    
+    // MARK: - Fetch Articles
     func fetchArticles(type: ScopeOptions,
                        options: RequestOptions,
                        page: Int = 1) {
@@ -75,7 +75,7 @@ extension SearchViewController {
                 case .success(let news):
                    
                     if let data = news.articles {
-                        self.updateTableView(with: data)
+                    self.updateTableView(with: data)
                     }
                 case .failure(let error):
                     print(error)

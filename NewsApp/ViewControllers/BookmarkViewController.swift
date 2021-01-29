@@ -12,27 +12,42 @@ class BookmarkViewController: UIViewController {
     private let tableView = UITableView()
     
     private var articlesList = [Article]()
+    private var bookmarkList = [Bookmark]()
+    // CoreData context
+    private let context = AppDelegate.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
-       // fetchBookmarks()
+        fetchBookmarks()
     }
-    /*
+    
+    override func viewDidAppear(_ animated: Bool) {
+        fetchBookmarks()
+    }
+    
     func fetchBookmarks() {
-        let context = CoreContext()
-       // let data = context.fetchBookmarks()
-        guard let data = context.fetchBookmarks() else {
-            return
+       
+        do {
+            bookmarkList = try context.fetch(Bookmark.fetchRequest())
+            
+            updateTableView(with: bookmarkList)
+        } catch {
+            bookmarkList = []
         }
+
+    }
+    
+    func updateTableView(with data: [Bookmark]) {
+        articlesList = []
         for item in data {
-            let article =  Article(source: nil, author: nil, title: item.title, articleDescription: item.articleDescription, url: item.url, urlToImage: item.urlToImage, publishedAt: item.publishedAt, content: nil)
+            let article = Article(from: item)
             articlesList.append(article)
         }
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
-    }*/
+    }
 
     func configureTableView() {
         view.addSubview(tableView)

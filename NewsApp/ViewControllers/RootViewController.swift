@@ -21,16 +21,19 @@ class RootViewController: UIViewController {
     
     // MARK: - CoreData context
     private let coreDataContainer = AppDelegate.persistentContainer
-    private let context = AppDelegate.viewContext
+    private let context = AppDelegate.backgroundContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("viewdidload")
         configureNavController()
         configureSearchBar()
         configureTableView()
         fetchArticles(type: .topHeadline, options: requestOptions)
         
     }
+    
+
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -67,17 +70,12 @@ class RootViewController: UIViewController {
     
     func configureTableView() {
         view.addSubview(tableView)
-        //mainScrollView.contentSize = tableView.bounds.size
-        //mainScrollView.addSubview(tableView)
-        
-        
         setTableViewDelegates()
         tableView.rowHeight = 370
         tableView.register(UINib(nibName: ArticleCell.identifier, bundle: nil), forCellReuseIdentifier: ArticleCell.identifier)
         tableView.pin(to: view)
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
-        
         
     }
 
@@ -96,6 +94,7 @@ extension RootViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: ArticleCell.identifier) as! ArticleCell
         let article = articles[indexPath.row]
         cell.set(article: article)
+        cell.delegate = self
         return cell
     }
     
@@ -106,6 +105,22 @@ extension RootViewController: UITableViewDelegate, UITableViewDataSource {
             viewController.url = url
         }
         navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+}
+
+// MARK: - Adding to Bookmark
+extension RootViewController: ArticleCellDelegate {
+    func bookmarkTapped(on article: Article) {
+        print(article.id.uuidString)
+        let bookmarkVM = BookmarkViewModel(with: context, by: article.id)
+        let isBookmark = bookmarkVM.fetchBookmark()
+        if isBookmark == nil {
+            bookmarkVM.saveToBookmark(article: article)
+        } else {
+            bookmarkVM.deleteFromBookmark()
+        }
+        
     }
     
 }
@@ -121,8 +136,9 @@ extension RootViewController {
             self.service?.fetchArticles(type: type, options: options, page: page) { result in
                 switch result {
                 case .success(let news):
+                    //print(news)
                     if let data = news.articles {
-                        print(data)
+                        
                         self.updateTableView(with: data)
                     }
                 case .failure(let error):

@@ -14,3 +14,4 @@ struct News: Codable {
     let articles: [Article]?
 }
 
+

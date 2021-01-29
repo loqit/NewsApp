@@ -8,13 +8,28 @@
 import Foundation
 
 struct Article: Codable {
-    let source: Source?
-    let author, title, articleDescription: String?
-    let url: String?
-    let urlToImage: String?
-    let publishedAt: String?
-    let content: String?
+    var source: Source?
+    var author, title, articleDescription: String?
+    var url: String?
+    var urlToImage: String?
+    var publishedAt: String?
+    var content: String?
+    
+    var isBookmark = false
+    var id = UUID()
 
+    init() {}
+    
+    // Adapter Bookmark to Article
+    init(from bookmark: Bookmark) {
+        self.init()
+        self.title              = bookmark.title
+        self.url                = bookmark.url
+        self.urlToImage         = bookmark.urlToImage
+        self.publishedAt        = bookmark.publishedAt
+        self.articleDescription = bookmark.articleDescription
+    }
+    
     enum CodingKeys: String, CodingKey {
         case source, author, title
         case articleDescription = "description"

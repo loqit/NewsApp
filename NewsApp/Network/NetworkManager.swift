@@ -7,6 +7,7 @@
 
 import Foundation
 import Alamofire
+import CoreData
 
 class NetworkManager {
     
@@ -23,6 +24,9 @@ class NetworkManager {
     }
     
     static let shared = NetworkManager()
+    // MARK: - CoreData context
+    private let context = AppDelegate.viewContext
+    //var managedObjectContext: NSManagedObjectContext!
     
     private init() {}
     
@@ -54,7 +58,6 @@ class NetworkManager {
                               encoding: encoding,
                               headers: self.headers)
         }
-        print("2")
         return request().validate().responseDecodable(of: T.self) { response in
             if let error = response.error {
                 print(error)
@@ -63,8 +66,9 @@ class NetworkManager {
             }
             
             if let data = response.data {
-                let decoder = JSONDecoder()
                 
+                // MARK: - decoder.userInfo = context
+                let decoder = JSONDecoder(context: self.context)
                 if let object = try? decoder.decode(T.self, from: data) {
                     completion(.success(object))
                     return

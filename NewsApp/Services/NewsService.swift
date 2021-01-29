@@ -21,7 +21,6 @@ class NewsService: ParseProtocol {
             let params = ["q"        : options.keyword,
                           "country"  : options.country.rawValue,
                           "category" : options.category?.rawValue ?? "",
-                         // "sources"  : options.source,
                           "pageSize" : options.pageSize,
                           "page"     : page] as [String : Any]
 
@@ -33,7 +32,7 @@ class NewsService: ParseProtocol {
             let params = ["q"       : options.keyword,
                           "from"    : options.from,
                           "to"      : options.to,
-                          "sources"  : options.source,
+                          "sources" : options.source,
                           "language": options.language.rawValue,
                           "sortBy"  : options.sortBy.rawValue,
                           "pageSize": options.pageSize,
@@ -47,8 +46,3 @@ class NewsService: ParseProtocol {
     }
 }
 
-enum Sorting: String, CaseIterable {
-    case relevancy
-    case popularity
-    case publishedAt
-}
