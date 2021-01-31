@@ -23,6 +23,8 @@ class ArticleCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         self.backgroundColor = .clear
+
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -33,9 +35,12 @@ class ArticleCell: UITableViewCell {
     @IBOutlet weak var bookmarkButton: UIButton!
     
     @IBAction func bookmarkTapped(_ sender: UIButton) {
-       
+        
         article.isBookmark = !article.isBookmark
-       
+        let fillBookmark = UIImage(systemName: "bookmark.fill")
+        let emptyBookmark = UIImage(systemName: "bookmark")
+        //bookmarkButton.imageView?.image = article.isBookmark ?  fillBookmark : emptyBookmark
+        //self.reloadInputViews()
         delegate?.bookmarkTapped(on: article)
     }
     

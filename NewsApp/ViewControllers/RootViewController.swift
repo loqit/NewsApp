@@ -27,6 +27,7 @@ class RootViewController: UIViewController {
         configureNavController()
         configureSearchBar()
         configureTableView()
+        configureRefresh()
         fetchArticles(type: .topHeadline, options: requestOptions)
         
     }
@@ -39,6 +40,22 @@ class RootViewController: UIViewController {
             vc.modalPresentationStyle = .fullScreen
             present(vc, animated: true)
         }
+    }
+    
+    func configureRefresh() {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refresh(_:)), for: .valueChanged)
+        if #available(iOS 10.0, *) {
+            tableView.refreshControl = refreshControl
+        } else {
+            tableView.backgroundView = refreshControl
+        }
+    }
+    
+    @objc
+    func refresh(_ refreshControl: UIRefreshControl) {
+        fetchArticles(type: .topHeadline, options: requestOptions)
+        refreshControl.endRefreshing()
     }
 
     
@@ -178,10 +195,23 @@ extension RootViewController: OptionsDelegate {
 extension RootViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        if let text = searchBar.text {
-            requestOptions.keyword = text
-            fetchArticles(type: .topHeadline, options: requestOptions)
-        }
+        
+        requestOptions.keyword = searchBar.text ?? ""
+        fetchArticles(type: .topHeadline, options: requestOptions)
+        
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchController.isActive = false
+        searchBar.text = requestOptions.keyword
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchController.isActive = false
+        requestOptions = RequestOptions()
+        articles = []
+        self.fetchArticles(type: .topHeadline, options: self.requestOptions)
+
     }
 }
 

@@ -27,6 +27,7 @@ class SearchViewController: UIViewController {
         configureTableView()
         configureNavBar()
         configureSearchBar()
+        searchController.searchBar.resignFirstResponder()
     }    
     
     @objc
@@ -42,6 +43,8 @@ class SearchViewController: UIViewController {
         navigationItem.hidesSearchBarWhenScrolling = true
   
         searchController.searchBar.delegate = self
+        
+        
     }
     
     func configureNavBar() {
@@ -114,6 +117,15 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let article = articleList[indexPath.row]
+        let viewController = PostViewController()
+        
+        viewController.article = article
+        
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+    
 }
 
 extension SearchViewController: UISearchBarDelegate {
@@ -123,6 +135,21 @@ extension SearchViewController: UISearchBarDelegate {
             fetchArticles(type: .everything, options: requestOptions)
         }
     }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchController.isActive = false
+        searchBar.text = requestOptions.keyword
+    }
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchController.isActive = false
+        requestOptions = RequestOptions()
+        articleList = []
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
+    
 }
 
 // MARK: - Adding to Bookmark
