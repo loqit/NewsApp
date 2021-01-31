@@ -30,7 +30,9 @@ class FilterViewController: UIViewController {
     let toDatePicker = UIDatePicker()
     
     private var requestOptions = RequestOptions()
+    
     // weak used in order to avoid retain circle
+    // Delegate connect RootViewController and FilterViewController
     weak var delegate: OptionsDelegate?
     
     // Array of all available sources
@@ -82,11 +84,8 @@ class FilterViewController: UIViewController {
     }
     
     func configureDatePickers() {
-        
         fromDatePicker.setupDatePicker(textField: fromField, selector: #selector(doneFromPressed))
         toDatePicker.setupDatePicker(textField: toField, selector: #selector(doneToPressed))
-        
-        //fromDatePicker.tag = FilterViewController.getUniqueIdentifier()
     }
     
 
@@ -125,10 +124,13 @@ class FilterViewController: UIViewController {
         setTextFieldStyle(textField: toField, text: "to date")
         
         setPickerViewDelegates(pickerView: sourcePeakerView, textField: sourceField)
+
         setPickerViewDelegates(pickerView: countryPeakerView, textField: countryField)
+        
         setPickerViewDelegates(pickerView: categoryPeakerView, textField: categoryField)
         setPickerViewDelegates(pickerView: languagePeakerView, textField: languageField)
         setPickerViewDelegates(pickerView: sortPeakerView, textField: sortField)
+
         
     }
     
@@ -234,7 +236,7 @@ extension FilterViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     
     
 }
-
+// MARK: - Fetch all available sources
 extension FilterViewController {
     func fetchSources() {
         self.service = SourceService()

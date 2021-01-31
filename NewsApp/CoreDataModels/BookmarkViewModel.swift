@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import UIKit
 
 class BookmarkViewModel {
     
@@ -76,4 +77,8 @@ class BookmarkViewModel {
               }
           }
       }
+    
+    func updateBadgeValue() {
+        
+    }
 }

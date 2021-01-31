@@ -10,7 +10,9 @@ import UIKit
 class OnBoardingViewController: UIViewController {
     
     private let scrollView = UIScrollView()
-    private let titles = ["News", "Search", "Bookmarks"]
+    private let titles = ["The latest news from around the world",
+                          "Search among all sources",
+                          "Save news to bookmarks"]
     private let rootVC = RootViewController()
     
     override func viewDidLoad() {
@@ -42,21 +44,22 @@ class OnBoardingViewController: UIViewController {
             
             // Attributes
             
-            let lable = UILabel(frame: CGRect(x: 10, y: 10, width: pageView.frame.width - 20, height: 120))
-            let imageView = UIImageView(frame: CGRect(x: 20, y: 140, width: pageView.frame.width - 20, height: 320))
+            let lable = UILabel(frame: CGRect(x: 10, y: 140+320, width: pageView.frame.width - 20, height: 120))
+            let imageView = UIImageView(frame: CGRect(x: 20, y: 140, width: pageView.frame.size.width - 20, height: 320))
             let nextButton = UIButton(frame: CGRect(x: pageView.frame.width - 65, y: pageView.frame.height - 100, width: 40, height: 50))
           //  let perviousButton = UIButton(frame: CGRect(x: 30, y: pageView.frame.height - 20, width: 40, height: 50))
             
             // Configure lable
             lable.textAlignment = .center
-            lable.font = UIFont(name: "Helvetica-Bold", size: 32)
+            lable.font = UIFont(name: "San-Francisco-Bold", size: 32)
             pageView.addSubview(lable)
             lable.text = titles[x]
+            
             
             // Configure imageView
             imageView.contentMode = .scaleAspectFit
             imageView.image = UIImage(named: "welcome_\(x + 1)")
-            print(x + 1)
+            
             pageView.addSubview(imageView)
             
             // Configure nextButton
@@ -65,7 +68,7 @@ class OnBoardingViewController: UIViewController {
             nextButton.backgroundColor = .clear
             nextButton.setTitle("Next", for: .normal)
             if x == titles.count - 1 {
-                nextButton.frame = CGRect(x: pageView.frame.width - 105, y: pageView.frame.height - 100, width: 100, height: 50)
+                nextButton.frame = CGRect(x: pageView.frame.width - 110, y: pageView.frame.height - 100, width: 100, height: 50)
                 nextButton.setTitle("Get started", for: .normal)
             }
             nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
@@ -78,6 +81,7 @@ class OnBoardingViewController: UIViewController {
     @objc
     func nextButtonTapped(_ button: UIButton) {
         guard button.tag < titles.count else {
+            Core.shared.setIsNotNewUser()
             dismiss(animated: true)
             return
         }

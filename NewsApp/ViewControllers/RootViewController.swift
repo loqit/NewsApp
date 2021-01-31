@@ -24,7 +24,6 @@ class RootViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("viewdidload")
         configureNavController()
         configureSearchBar()
         configureTableView()
@@ -32,21 +31,16 @@ class RootViewController: UIViewController {
         
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    override func viewWillAppear(_ animated: Bool) {
         // MARK: - OnBoarding
-        if true
-            //Core.shared.isNewUser()
+        if Core.shared.isNewUser()
         {
-            // Show onboarding
             let vc = OnBoardingViewController()
             vc.modalPresentationStyle = .fullScreen
-            //let navVC = UINavigationController(rootViewController: vc)
             present(vc, animated: true)
-            
-            //Core.shared.setIsNotNewUser()
         }
     }
+
     
     // MARK:- Navigate to FilterViewController
     @objc
@@ -148,7 +142,6 @@ extension RootViewController {
             self.service?.fetchArticles(type: type, options: options, page: page) { result in
                 switch result {
                 case .success(let news):
-                    //print(news)
                     if let data = news.articles {
                         
                         self.updateTableView(with: data)

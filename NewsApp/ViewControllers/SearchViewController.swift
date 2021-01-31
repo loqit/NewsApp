@@ -27,6 +27,14 @@ class SearchViewController: UIViewController {
         configureTableView()
         configureNavBar()
         configureSearchBar()
+    }    
+    
+    @objc
+    private func toFilter() {
+        let vc = FilterViewController()
+        vc.delegate = self
+        let navVC = UINavigationController(rootViewController: vc)
+        present(navVC, animated: true)
     }
     
     func configureSearchBar() {
@@ -39,9 +47,9 @@ class SearchViewController: UIViewController {
     func configureNavBar() {
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.prefersLargeTitles = true
-      //  let filterButton = UIBarButtonItem(image: UIImage(named: "filter"), style: .plain, target: self, action: #selector(toFilter))
-      //  filterButton.tintColor = .black
-      //  navigationItem.rightBarButtonItem = filterButton
+        let filterButton = UIBarButtonItem(image: UIImage(named: "filter"), style: .plain, target: self, action: #selector(toFilter))
+        filterButton.tintColor = .black
+        navigationItem.rightBarButtonItem = filterButton
     }
     
     func configureTableView() {
@@ -120,8 +128,7 @@ extension SearchViewController: UISearchBarDelegate {
 // MARK: - Adding to Bookmark
 extension SearchViewController: ArticleCellDelegate {
     func bookmarkTapped(on article: Article) {
-        //print(article.hashValue)
-        //let hash = Int64(article.hashValue)
+
         guard let url = article.url else {
             return
         }
@@ -135,4 +142,17 @@ extension SearchViewController: ArticleCellDelegate {
         
     }
     
+}
+
+extension SearchViewController: OptionsDelegate {
+    
+    // MARK: - Get options from FilterViewController
+    
+    func setOptions(with requestOptions: RequestOptions) {
+        self.requestOptions = requestOptions
+        fetchArticles(type: .everything, options: requestOptions)
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
 }

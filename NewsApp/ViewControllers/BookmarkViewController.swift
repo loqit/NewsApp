@@ -22,7 +22,7 @@ class BookmarkViewController: UIViewController {
         fetchBookmarks()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         fetchBookmarks()
     }
     
@@ -91,8 +91,10 @@ extension BookmarkViewController: ArticleCellDelegate {
         }
         let bookmarkVM = BookmarkViewModel(with: context, by: url)
         bookmarkVM.deleteFromBookmark()
+        
+        // Update view
         DispatchQueue.main.async {
-            self.tableView.reloadData()
+            self.viewWillAppear(true)
         }
     }
     

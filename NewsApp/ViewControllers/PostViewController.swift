@@ -17,6 +17,7 @@ class PostViewController: UIViewController {
     var article = Article()
     
     
+    
     // MARK: - CoreData context
     private let context = AppDelegate.backgroundContext
     
@@ -65,7 +66,10 @@ class PostViewController: UIViewController {
 
     @objc
     private func makeNote() {
-        
+        let vc = NoteViewController()
+        vc.article = self.article
+        let navVC = UINavigationController(rootViewController: vc)
+        present(navVC, animated: true)
     }
     
     // MARK: - Add to Bookmark
@@ -118,4 +122,10 @@ class PostViewController: UIViewController {
     }
 }
 
-
+extension PostViewController: NoteDelegate {
+    func setNote(to article: Article) {
+        //
+    }
+    
+    
+}

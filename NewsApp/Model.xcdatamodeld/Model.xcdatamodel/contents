@@ -13,7 +13,12 @@
         <attribute name="url" optional="YES" attributeType="String"/>
         <attribute name="urlToImage" optional="YES" attributeType="String"/>
     </entity>
+    <entity name="Note" representedClassName="Note" syncable="YES" codeGenerationType="class">
+        <attribute name="text" optional="YES" attributeType="String"/>
+        <attribute name="urlOfArticle" optional="YES" attributeType="String"/>
+    </entity>
     <elements>
         <element name="Bookmark" positionX="0" positionY="108" width="128" height="194"/>
+        <element name="Note" positionX="54" positionY="243" width="128" height="59"/>
     </elements>
 </model>
