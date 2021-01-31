@@ -11,7 +11,7 @@ class ArticleCell: UITableViewCell {
 
     static let identifier = "ArticleCell"
     weak var delegate: ArticleCellDelegate?
-    lazy private var article = Article()
+    private var article = Article()
 
     
     

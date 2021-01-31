@@ -30,6 +30,7 @@ class FilterViewController: UIViewController {
     let toDatePicker = UIDatePicker()
     
     private var requestOptions = RequestOptions()
+    // weak used in order to avoid retain circle
     weak var delegate: OptionsDelegate?
     
     // Array of all available sources

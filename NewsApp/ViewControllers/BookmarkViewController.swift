@@ -13,8 +13,8 @@ class BookmarkViewController: UIViewController {
     
     private var articlesList = [Article]()
     private var bookmarkList = [Bookmark]()
-    // CoreData context
-    private let context = AppDelegate.viewContext
+    // MARK: - CoreData context
+    private let context = AppDelegate.backgroundContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,8 +76,24 @@ extension BookmarkViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: ArticleCell.identifier) as! ArticleCell
         let article = articlesList[indexPath.row]
         cell.set(article: article)
+        cell.delegate = self
         return cell
     }
     
+    
+}
+
+// MARK: - Adding to Bookmark
+extension BookmarkViewController: ArticleCellDelegate {
+    func bookmarkTapped(on article: Article) {
+        guard let url = article.url else {
+            return
+        }
+        let bookmarkVM = BookmarkViewModel(with: context, by: url)
+        bookmarkVM.deleteFromBookmark()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
     
 }

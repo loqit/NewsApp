@@ -102,6 +102,7 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: ArticleCell.identifier) as! ArticleCell
         let article = articleList[indexPath.row]
         cell.set(article: article)
+        cell.delegate = self
         return cell
     }
     
@@ -116,3 +117,22 @@ extension SearchViewController: UISearchBarDelegate {
     }
 }
 
+// MARK: - Adding to Bookmark
+extension SearchViewController: ArticleCellDelegate {
+    func bookmarkTapped(on article: Article) {
+        //print(article.hashValue)
+        //let hash = Int64(article.hashValue)
+        guard let url = article.url else {
+            return
+        }
+        let bookmarkVM = BookmarkViewModel(with: context, by: url)
+        let isBookmark = bookmarkVM.fetchBookmark()
+        if isBookmark == nil {
+            bookmarkVM.saveToBookmark(article: article)
+        } else {
+            bookmarkVM.deleteFromBookmark()
+        }
+        
+    }
+    
+}

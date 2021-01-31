@@ -23,8 +23,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func createHeadlineController() -> UINavigationController {
         let headlineVC = RootViewController()
-        let button = UITabBarItem(tabBarSystemItem: .recents, tag: 1)
-        button.title = "Top Headline"
+        
+        //let button = UITabBarItem(tabBarSystemItem: .recents, tag: 1)
+        let button = UITabBarItem(title: "Top Headlines", image: UIImage(named: "topHeadlines"), tag: 1)
+        button.title = "Top Headlines"
         headlineVC.tabBarItem = button
         
         return UINavigationController(rootViewController: headlineVC)

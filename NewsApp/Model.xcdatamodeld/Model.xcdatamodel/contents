@@ -5,6 +5,7 @@
         <attribute name="author" optional="YES" attributeType="String"/>
         <attribute name="content" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="identifier" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="publishedAt" optional="YES" attributeType="String"/>
         <attribute name="sourceId" optional="YES" attributeType="String"/>
         <attribute name="sourceName" optional="YES" attributeType="String"/>
@@ -13,6 +14,6 @@
         <attribute name="urlToImage" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="Bookmark" positionX="0" positionY="108" width="128" height="179"/>
+        <element name="Bookmark" positionX="0" positionY="108" width="128" height="194"/>
     </elements>
 </model>

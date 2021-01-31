@@ -12,15 +12,14 @@ class RootViewController: UIViewController {
     private let searchController = UISearchController(searchResultsController: nil)
     private var tableView = UITableView()
     
-    private var collectionView: UICollectionView?
-    private let mainScrollView = UIScrollView()
+   // private var collectionView: UICollectionView?
+   // private let mainScrollView = UIScrollView()
     
     private var articles = [Article]()
     private var requestOptions = RequestOptions()
     private var service: ParseProtocol?
     
     // MARK: - CoreData context
-    private let coreDataContainer = AppDelegate.persistentContainer
     private let context = AppDelegate.backgroundContext
     
     override func viewDidLoad() {
@@ -33,14 +32,23 @@ class RootViewController: UIViewController {
         
     }
     
-
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-       // configureMainScrollView()
+        // MARK: - OnBoarding
+        if true
+            //Core.shared.isNewUser()
+        {
+            // Show onboarding
+            let vc = OnBoardingViewController()
+            vc.modalPresentationStyle = .fullScreen
+            //let navVC = UINavigationController(rootViewController: vc)
+            present(vc, animated: true)
+            
+            //Core.shared.setIsNotNewUser()
+        }
     }
     
-    // Go to FilterViewController
+    // MARK:- Navigate to FilterViewController
     @objc
     private func toFilter() {
         let vc = FilterViewController()
@@ -84,7 +92,7 @@ class RootViewController: UIViewController {
         tableView.dataSource = self
     }
 }
-
+// TODO: - Make scroll up to update
 extension RootViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return articles.count
@@ -101,9 +109,9 @@ extension RootViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let article = articles[indexPath.row]
         let viewController = PostViewController()
-        if let url = article.url {
-            viewController.url = url
-        }
+        
+        viewController.article = article
+        
         navigationController?.pushViewController(viewController, animated: true)
     }
     
@@ -112,8 +120,12 @@ extension RootViewController: UITableViewDelegate, UITableViewDataSource {
 // MARK: - Adding to Bookmark
 extension RootViewController: ArticleCellDelegate {
     func bookmarkTapped(on article: Article) {
-        print(article.id.uuidString)
-        let bookmarkVM = BookmarkViewModel(with: context, by: article.id)
+        //print(article.hashValue)
+        //let hash = Int64(article.hashValue)
+        guard let url = article.url else {
+            return
+        }
+        let bookmarkVM = BookmarkViewModel(with: context, by: url)
         let isBookmark = bookmarkVM.fetchBookmark()
         if isBookmark == nil {
             bookmarkVM.saveToBookmark(article: article)
@@ -181,7 +193,4 @@ extension RootViewController: UISearchBarDelegate {
 }
 
 
-enum ScopeOptions: String, CaseIterable {
-    case topHeadline = "Top Headlines"
-    case everything  = "Everything"
-}
+

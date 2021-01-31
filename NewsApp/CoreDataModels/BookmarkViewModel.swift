@@ -11,17 +11,21 @@ import CoreData
 class BookmarkViewModel {
     
     private var context: NSManagedObjectContext
-    private var id: UUID
+    //private var id: UUID
+    private var url: String
     
-    init(with context: NSManagedObjectContext, by id: UUID) {
+    
+    init(with context: NSManagedObjectContext, by url: String) {
         self.context = context
-        self.id = id
+        //self.id = id
+        self.url = url
     }
     
     // Get Bookmark by id
     func fetchBookmark() -> Bookmark? {
         let fetchRequest: NSFetchRequest<Bookmark> = NSFetchRequest(entityName: "Bookmark")
-        fetchRequest.predicate = NSPredicate(format: "id == %@", id.uuidString)
+        
+        fetchRequest.predicate = NSPredicate(format: "url == %@", url)
         fetchRequest.fetchLimit = 1
         do {
             return try context.fetch(fetchRequest).first
@@ -33,6 +37,7 @@ class BookmarkViewModel {
     
     func saveToBookmark(article: Article) {
         // Checking if a Bookmark exists
+        
         guard fetchBookmark() == nil else {
             return
         }
@@ -44,8 +49,8 @@ class BookmarkViewModel {
         bookmark.urlToImage         = article.urlToImage
         bookmark.publishedAt        = article.publishedAt
         bookmark.articleDescription = article.articleDescription
-        
-        bookmark.id                 = article.id
+        bookmark.identifier         = Int64(article.hashValue)
+        bookmark.id                 = ((article.id))
         print("Save \(bookmark.title)")
         saveContext()
     }

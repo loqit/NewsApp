@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct Article: Codable {
+struct Article: Codable, Hashable {
+    
     var source: Source?
     var author, title, articleDescription: String?
     var url: String?
@@ -17,6 +18,8 @@ struct Article: Codable {
     
     var isBookmark = false
     var id = UUID()
+    
+    //var hashValue
 
     init() {}
     
@@ -36,4 +39,5 @@ struct Article: Codable {
         case url, urlToImage, publishedAt, content
     }
 }
+
 

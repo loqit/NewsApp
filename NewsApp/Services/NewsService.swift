@@ -46,3 +46,7 @@ class NewsService: ParseProtocol {
     }
 }
 
+enum ScopeOptions: String, CaseIterable {
+    case topHeadline = "top-headlines"
+    case everything  = "everything"
+}

@@ -10,10 +10,15 @@ import WebKit
 
 class PostViewController: UIViewController {
 
-    @objc private var webView = WKWebView()
-    private let activityIndicator = UIActivityIndicatorView()
+    @objc
+    private var webView             = WKWebView()
+    private let activityIndicator   = UIActivityIndicatorView()
     private var observation: NSKeyValueObservation?
-    var url = ""
+    var article = Article()
+    
+    
+    // MARK: - CoreData context
+    private let context = AppDelegate.backgroundContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,20 +37,20 @@ class PostViewController: UIViewController {
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.prefersLargeTitles = true
         
-        let bookMarkButton = UIBarButtonItem(image:  UIImage(named: "bookmark"), style: .plain, target: self, action: #selector(toFavAction))
+        let bookMarkButton = UIBarButtonItem(image: UIImage(named: "bookmark"), style: .plain, target: self, action: #selector(addToBookmark))
         let shareButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareAction(_:)))
         let noteButton = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(makeNote))
         
         bookMarkButton.tintColor = .black
-        shareButton.tintColor = .black
-        noteButton.tintColor = .black
+        shareButton.tintColor    = .black
+        noteButton.tintColor     = .black
        
         navigationItem.rightBarButtonItems = [shareButton, noteButton, bookMarkButton]
     }
     
     private func configureActivityIndicator() {
-        self.view.addSubview(self.activityIndicator)
-        activityIndicator.center = self.view.center
+        view.addSubview(activityIndicator)
+        activityIndicator.center = view.center
         activityIndicator.hidesWhenStopped = true
     }
     
@@ -63,14 +68,25 @@ class PostViewController: UIViewController {
         
     }
     
+    // MARK: - Add to Bookmark
     @objc
-    private func toFavAction(_ sender: UIBarButtonItem) {
-
+    private func addToBookmark(_ sender: UIBarButtonItem) {
+        guard let url = article.url else {
+            return
+        }
+        let bookmarkVM = BookmarkViewModel(with: context, by: url)
+        let isBookmark = bookmarkVM.fetchBookmark()
+        if isBookmark == nil {
+            bookmarkVM.saveToBookmark(article: article)
+        } else {
+            bookmarkVM.deleteFromBookmark()
+        }
     }
     
     @objc
     private func shareAction(_ sender: UIBarButtonItem) {
         var items = [String]()
+        guard let url = article.url else { return }
         items.append(url)
         let shareController = UIActivityViewController(activityItems: items, applicationActivities: nil)
         
@@ -82,13 +98,14 @@ class PostViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
+        guard let url = article.url else { return }
         loadRequest(from: url)
     }
     
     private func configureWebView() {
-        webView.frame = self.view.frame
+        webView.frame = view.frame
         webView.frame.origin.y = 90
-        self.view.addSubview(webView)
+        view.addSubview(webView)
         webView.pin(to: view)
     }
     
