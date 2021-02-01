@@ -13,13 +13,10 @@ class NoteViewModel {
     
     private var context: NSManagedObjectContext
     private var url: String
-    //private var note: Note
     
     init(with context: NSManagedObjectContext, by url: String) {
         self.context = context
         self.url = url
-       // self.note = Note(context: context)
-        //self.note.urlOfArticle = url
     }
         
     func fetchNotes() -> Note? {
@@ -48,17 +45,14 @@ class NoteViewModel {
     
     func createNote(with text: String) {
         let note = fetchNotes() ?? Note(context: context)
-        // let note = Note(context: context)
         note.urlOfArticle = url
         note.text = text
         saveContext()
     }
     
     func setPassword(_ password: String) {
-        guard let note = fetchNotes() else {
-            return
-        }
-
+        let note = fetchNotes() ?? Note(context: context)
+        note.urlOfArticle = url
         note.passwordHash = calcHash(from: password)
         
         saveContext()

@@ -136,11 +136,18 @@ extension RootViewController: ArticleCellDelegate {
         guard let url = article.url else {
             return
         }
+        guard let tabItems = tabBarController?.tabBar.items else {
+            return
+        }
+        
         let bookmarkVM = BookmarkViewModel(with: context, by: url)
         let isBookmark = bookmarkVM.fetchBookmark()
         if isBookmark == nil {
+           
+            tabItems[2].badgeValue = ""
             bookmarkVM.saveToBookmark(article: article)
         } else {
+            tabItems[2].badgeValue = nil
             bookmarkVM.deleteFromBookmark()
         }
         

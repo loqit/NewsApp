@@ -136,9 +136,6 @@ class PostViewController: UIViewController {
     
     func configureAlert() {
         
-       // var passwordTextField: UITextField?
-        
-        
         let alert = UIAlertController(title: "Enter password", message: nil, preferredStyle: .alert)
         alert.addTextField { (textfield) in
             textfield.placeholder = "Password"

@@ -12,13 +12,12 @@ import UIKit
 class BookmarkViewModel {
     
     private var context: NSManagedObjectContext
-    //private var id: UUID
+
     private var url: String
     
     
     init(with context: NSManagedObjectContext, by url: String) {
         self.context = context
-        //self.id = id
         self.url = url
     }
     
@@ -52,7 +51,6 @@ class BookmarkViewModel {
         bookmark.articleDescription = article.articleDescription
         bookmark.identifier         = Int64(article.hashValue)
         bookmark.id                 = ((article.id))
-        print("Save \(bookmark.title)")
         saveContext()
     }
     
@@ -61,7 +59,6 @@ class BookmarkViewModel {
         guard let bookmark = fetchBookmark() else {
             return
         }
-        print("Delete \(bookmark.title)")
         context.delete(bookmark)
         saveContext()
     }

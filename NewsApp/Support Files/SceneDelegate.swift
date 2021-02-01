@@ -44,6 +44,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let bookmarkVC = BookmarkViewController()
         bookmarkVC.title = "Bookmarks"
         bookmarkVC.tabBarItem = UITabBarItem(tabBarSystemItem: .bookmarks, tag: 3)
+        
         return UINavigationController(rootViewController: bookmarkVC)
     }
     

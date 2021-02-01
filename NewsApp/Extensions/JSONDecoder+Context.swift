@@ -12,6 +12,8 @@ extension JSONDecoder {
     
     convenience init(context: NSManagedObjectContext) {
         self.init()
+        print("Context \(context)")
         self.userInfo[CodingUserInfoKey.context] = context
+        print("UserInfo \(self.userInfo[CodingUserInfoKey.context])")
     }
 }

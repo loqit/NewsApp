@@ -72,10 +72,6 @@ class NoteViewController: UIViewController {
             
             guard let password = textfield.text else { return }
             note.setPassword(password)
-            
-            let noteModel = note.fetchNotes()
-
-            
         }
         
         let cancelButton = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)

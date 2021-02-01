@@ -20,10 +20,15 @@ class BookmarkViewController: UIViewController {
         super.viewDidLoad()
         configureTableView()
         fetchBookmarks()
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
         fetchBookmarks()
+        guard let tabItems = tabBarController?.tabBar.items else {
+            return
+        }
+        tabItems[2].badgeValue = nil
     }
     
     func fetchBookmarks() {
@@ -40,6 +45,7 @@ class BookmarkViewController: UIViewController {
     
     func updateTableView(with data: [Bookmark]) {
         articlesList = []
+        
         for item in data {
             let article = Article(from: item)
             articlesList.append(article)
