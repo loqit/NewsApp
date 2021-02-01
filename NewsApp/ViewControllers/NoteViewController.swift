@@ -10,7 +10,7 @@ import UIKit
 class NoteViewController: UIViewController {
 
     private var textView = UITextView()
-    private var context = AppDelegate.backgroundContext
+    private let context = AppDelegate.backgroundContext
     var article = Article()
     
     override func viewDidLoad() {
@@ -50,7 +50,41 @@ class NoteViewController: UIViewController {
 
     func configureNavController() {
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(saveNote))
-        navigationItem.leftBarButtonItem = doneButton
+        let protectButton = UIBarButtonItem(title: "Protect", style: .plain, target: self, action: #selector(protectNote))
+        navigationItem.rightBarButtonItem = doneButton
+        navigationItem.leftBarButtonItem = protectButton
     }
     
+    @objc
+    func protectNote() {
+        let alert = UIAlertController(title: "Protect Note", message: "Create password", preferredStyle: .alert)
+        alert.addTextField { (textfield) in
+            textfield.placeholder = "Password"
+            textfield.isSecureTextEntry = true
+        }
+        
+        let submitButton = UIAlertAction(title: "Confirm", style: .default) { (action) in
+            let textfield = alert.textFields![0]
+            guard let url = self.article.url else {
+                return
+            }
+            let note = NoteViewModel(with: self.context, by: url)
+            
+            guard let password = textfield.text else { return }
+            note.setPassword(password)
+            
+            let noteModel = note.fetchNotes()
+
+            
+        }
+        
+        let cancelButton = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        alert.addAction(cancelButton)
+        alert.addAction(submitButton)
+        
+        
+        self.present(alert, animated: true)
+        
+    }
 }

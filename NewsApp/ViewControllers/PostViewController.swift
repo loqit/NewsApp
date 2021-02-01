@@ -16,6 +16,7 @@ class PostViewController: UIViewController {
     private var observation: NSKeyValueObservation?
     var article = Article()
     
+    private var isOpen = false
     
     
     // MARK: - CoreData context
@@ -64,12 +65,24 @@ class PostViewController: UIViewController {
         }
     }
 
+    // MARK: - Make note
     @objc
     private func makeNote() {
-        let vc = NoteViewController()
-        vc.article = self.article
-        let navVC = UINavigationController(rootViewController: vc)
-        present(navVC, animated: true)
+        guard let url = self.article.url else {
+            return
+        }
+        let noteVM = NoteViewModel(with: self.context, by: url)
+        let note = noteVM.fetchNotes()
+
+        guard (note?.passwordHash) != nil else {
+
+            let vc = NoteViewController()
+            vc.article = self.article
+            let navVC = UINavigationController(rootViewController: vc)
+            self.present(navVC, animated: true)
+            return
+        }
+        configureAlert()
     }
     
     // MARK: - Add to Bookmark
@@ -120,12 +133,43 @@ class PostViewController: UIViewController {
         let request = URLRequest(url: url)
         webView.load(request)
     }
+    
+    func configureAlert() {
+        
+       // var passwordTextField: UITextField?
+        
+        
+        let alert = UIAlertController(title: "Enter password", message: nil, preferredStyle: .alert)
+        alert.addTextField { (textfield) in
+            textfield.placeholder = "Password"
+            textfield.isSecureTextEntry = true
+        }
+        
+        let cancelButton = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let submitButton = UIAlertAction(title: "Submit", style: .default) { (action) in
+            let textfield = alert.textFields![0]
+            guard let url = self.article.url, let password = textfield.text else {
+                return
+            }
+            let noteVM = NoteViewModel(with: self.context, by: url)
+            let note = noteVM.fetchNotes()
+            let passHash = noteVM.calcHash(from: password)
+
+            guard let rightPass = note?.passwordHash else {
+                return
+            }
+            if passHash == rightPass {
+                
+                let vc = NoteViewController()
+                vc.article = self.article
+                let navVC = UINavigationController(rootViewController: vc)
+                self.present(navVC, animated: true)
+            }
+        }
+        alert.addAction(cancelButton)
+        alert.addAction(submitButton)
+        present(alert, animated: true)
+    }
 }
 
-extension PostViewController: NoteDelegate {
-    func setNote(to article: Article) {
-        //
-    }
-    
-    
-}
+

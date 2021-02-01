@@ -7,17 +7,21 @@
 
 import Foundation
 import CoreData
+import CryptoKit
 
 class NoteViewModel {
     
     private var context: NSManagedObjectContext
     private var url: String
+    //private var note: Note
     
     init(with context: NSManagedObjectContext, by url: String) {
         self.context = context
         self.url = url
+       // self.note = Note(context: context)
+        //self.note.urlOfArticle = url
     }
-    
+        
     func fetchNotes() -> Note? {
         let fetchRequest: NSFetchRequest<Note> = NSFetchRequest(entityName: "Note")
         
@@ -30,12 +34,35 @@ class NoteViewModel {
         }
     }
     
+    func fetchPassword() -> Note? {
+        let fetchRequest: NSFetchRequest<Note> = NSFetchRequest(entityName: "Note")
+        
+        fetchRequest.predicate = NSPredicate(format: "urlOfArticle == %@", url)
+        do {
+            return try context.fetch(fetchRequest).first
+        } catch {
+            let nserror = error as NSError
+            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+        }
+    }
+    
     func createNote(with text: String) {
-        print("createNote \(text)")
-        let note = Note(context: context)
+        let note = fetchNotes() ?? Note(context: context)
+        // let note = Note(context: context)
         note.urlOfArticle = url
         note.text = text
         saveContext()
+    }
+    
+    func setPassword(_ password: String) {
+        guard let note = fetchNotes() else {
+            return
+        }
+
+        note.passwordHash = calcHash(from: password)
+        
+        saveContext()
+        
     }
     
     private func saveContext () {
@@ -49,4 +76,14 @@ class NoteViewModel {
               }
           }
       }
+    
+    
+    // Password
+    
+    func calcHash(from inputString: String) -> String {
+        let inputData = Data(inputString.utf8)
+        let hashed = SHA256.hash(data: inputData)
+        let hashString = hashed.compactMap { String(format: "%02x", $0) }.joined()
+        return hashString
+    }
 }
